@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        @font-face { font-family: 'Exo 2'; src: url('https://googleapis.com'); }
+        body
+            {
+                margin: 0;
+                padding: 0;
+                overflow: hidden;
+                background: transparent;
+                color: red;
+                font-family: 'Exo 2', sans-serif;
+            }
+
+        #exscore
+            {
+                text-color:red;
+                font-size:80px
+            }
+            
+        #exacc
+            {
+                text-color:red;
+                font-size:18px
+            }
+
+        #text
+            {
+                color:#FFA500;
+                font-size:30px;
+                text-align:left;
+            }
+
+    </style>
+</head>
+
+<body>
+<div id="text">EXSCORE</div>
+<div id="exscore">-</div>
+<div id="exacc">NOACC%</div>
+
+<script>
+const addr = "127.0.0.1:24050";
+const socket = new WebSocket(`ws://${addr}/ws`);
+socket.onmessage = (event) => {
+    const data = JSON.parse(event.data);
+
+    const EXscore = document.getElementById('exscore');
+    const EXacc = document.getElementById('exacc');
+    const hits = data.gameplay?.hits;
+    if (!hits) return;
+
+    const n300g = hits.geki || 0;
+    const n300 = hits['300'] || 0;
+    const n200 = hits.katu || 0;
+    const n100 = hits['100'] || 0;
+    const n50 = hits['50'] || 0;
+    const nMiss = hits['0'] || 0;
+    
+    // change the values of points awarded here
+    const exPFg = n300g * 5;
+    const exPF = n300 * 4;
+    const exGR = n200 * 3;
+    const exGD = n100 * 2;
+    const exBD = n50 * 1;
+    
+    const totalNotes = n300g + n300 + n200 + n100 + n50 + nMiss;
+
+    if (totalNotes > 0) {
+        const totalEXscore = exPFg + exPF + exGR + exGD + exBD;
+        EXscore.innerText = totalEXscore;
+        const maxEXscore = totalNotes * 5;
+        const cEXacc = (totalEXscore / maxEXscore) * 100;
+        EXacc.innerText = cEXacc.toFixed(2) + "%";
+       } else {
+            EXscore.innerText = "-";
+            EXacc.innerText = "NOACC%";
+         }
+};
+    
+</script>
+</body>
