@@ -12,4 +12,4 @@ Miss = 0
 
 Don't forget to also edit the value of the max EX score.
 
-works out of box with tosu v1.5 with osu!lazer, compatibility with other versions is currently unknown
+works out of box with tosu v4.19.2 with osu!lazer, compatibility with other versions is currently unknown
