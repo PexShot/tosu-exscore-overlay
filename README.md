@@ -1,7 +1,7 @@
 # tosu-exscore-overlay
 A simple configurable overlay for tosu that mimics IIDX EX scoring (osu!mania recomended)
 
-To edit the awarded point value you may edit the values directly in the html
+To edit the awarded point value you may edit the values directly in the html  
 The default value assigned are:  
 300g = 5  
 300 = 4  
