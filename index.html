@@ -15,13 +15,13 @@
 
         #exscore
             {
-                text-color:red;
+                color:red;
                 font-size:80px
             }
             
         #exacc
             {
-                text-color:red;
+                color:red;
                 font-size:18px
             }
 
@@ -31,6 +31,12 @@
                 font-size:30px;
                 text-align:left;
             }
+        #note
+            {
+                color:#FFFFFF;
+                font-size:18px;
+                text-align:right;
+            }
 
     </style>
 </head>
@@ -39,45 +45,63 @@
 <div id="text">EXSCORE</div>
 <div id="exscore">-</div>
 <div id="exacc">NOACC%</div>
+<div id="note">unknown preset</div>
 
 <script>
-const addr = "127.0.0.1:24050";
-const socket = new WebSocket(`ws://${addr}/ws`);
-socket.onmessage = (event) => {
-    const data = JSON.parse(event.data);
+// loads the judgement value straight from judgement/config.json
 
+async function loadValueData() {
+    const value = await fetch("judgement/config.json")
+    const judge = await value.json()
+    const Note = document.getElementById('note')
+    Note.innerText = judge.presetname
+    setupData(judge)
+    }
+
+loadValueData();
+
+function setupData(judge) {
     const EXscore = document.getElementById('exscore');
     const EXacc = document.getElementById('exacc');
-    const hits = data.gameplay?.hits;
-    if (!hits) return;
 
-    const n300g = hits.geki || 0;
-    const n300 = hits['300'] || 0;
-    const n200 = hits.katu || 0;
-    const n100 = hits['100'] || 0;
-    const n50 = hits['50'] || 0;
-    const nMiss = hits['0'] || 0;
-    
-    // change the values of points awarded here
-    const exPFg = n300g * 5;
-    const exPF = n300 * 4;
-    const exGR = n200 * 3;
-    const exGD = n100 * 2;
-    const exBD = n50 * 1;
-    
-    const totalNotes = n300g + n300 + n200 + n100 + n50 + nMiss;
+    // connects to tosu
+    const addr = "127.0.0.1:24050";
+    const socket = new WebSocket(`ws://${addr}/ws`);
+    socket.onmessage = (event) => {
+        const data = JSON.parse(event.data);
 
-    if (totalNotes > 0) {
-        const totalEXscore = exPFg + exPF + exGR + exGD + exBD;
-        EXscore.innerText = totalEXscore;
-        const maxEXscore = totalNotes * 5;
-        const cEXacc = (totalEXscore / maxEXscore) * 100;
-        EXacc.innerText = cEXacc.toFixed(2) + "%";
-       } else {
-            EXscore.innerText = "-";
-            EXacc.innerText = "NOACC%";
-         }
-};
+        const hits = data.gameplay?.hits;
+        if (!hits) return;
+
+        const n300g = hits.geki || 0;
+        const n300 = hits['300'] || 0;
+        const n200 = hits.katu || 0;
+        const n100 = hits['100'] || 0;
+        const n50 = hits['50'] || 0;
+        const nMiss = hits['0'] || 0;
+    
+        // value of points are here (as of v1.1 it is recommened to edit the config.json instead)
+        const exPFg = n300g * judge.PFg;
+        const exPF = n300 * judge.PF;
+        const exGR = n200 * judge.GR;
+        const exGD = n100 * judge.GD;
+        const exBD = n50 * judge.BD;
+        const exMS = nMiss * judge.MS;
+    
+        const totalNotes = n300g + n300 + n200 + n100 + n50 + nMiss;
+
+        if (totalNotes > 0) {
+            const totalEXscore = exPFg + exPF + exGR + exGD + exBD + exMS;
+            EXscore.innerText = totalEXscore;
+            const maxEXscore = totalNotes * judge.PFg;
+            const cEXacc = (totalEXscore / maxEXscore) * 100;
+            EXacc.innerText = cEXacc.toFixed(2) + "%";
+           } else {
+                EXscore.innerText = "-";
+                EXacc.innerText = "NOACC%";
+             }
+    };
+}
     
 </script>
 </body>

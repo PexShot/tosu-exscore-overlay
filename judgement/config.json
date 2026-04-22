@@ -1,0 +1,10 @@
+{
+  "_comment" : "PFg is MAX(300g), PF is Perfect(300), GR is Great(200), GD is Good(100), BD is Bad(50), MS is Miss(0).", 
+  "presetname": "IIDX Style Preset (default)",
+  "PFg" : 2,
+  "PF" : 1,
+  "GR" : 0,
+  "GD" : 0,
+  "BD" : 0,
+  "MS" : 0
+}

@@ -1,3 +1,4 @@
 Name: EXscore
 Author: PexShot
+Version: 1.1
 CompatibleWith: tosu

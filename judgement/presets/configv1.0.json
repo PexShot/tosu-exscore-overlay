@@ -1,0 +1,10 @@
+{
+  "_comment" : "remember to rename this file to config.json if you plan on using this preset", 
+  "presetname": "Original v1.0 EXSCORE default Preset",
+  "PFg" : 5,
+  "PF" : 4,
+  "GR" : 3,
+  "GD" : 2,
+  "BD" : 1,
+  "MS" : 0
+}
