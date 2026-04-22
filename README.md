@@ -33,4 +33,3 @@ works out of box with tosu v4.19.2 with osu!lazer, compatibility with other vers
 
 
 NOTE: changes to config.json wont be shown until you restart the overlay
-
